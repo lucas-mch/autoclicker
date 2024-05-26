@@ -1,34 +1,34 @@
-package dev.lucasmachado;
+package dev.lucasmachado.runner;
 
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
+import dev.lucasmachado.actions.IAction;
+import dev.lucasmachado.actions.impl.Cooking_Karambwan;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import javax.swing.*;
 import java.awt.*;
-
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-public class AutoClicker extends JFrame implements NativeKeyListener {
+public class Runner extends JFrame implements NativeKeyListener {
     private static final Integer intializeTimer = 15;
-    private static final Actions actions = new Actions();
+    private static final Cooking_Karambwan COOKING_KARAMBWAN = new Cooking_Karambwan();
     private Terminal terminal;
     private Instant startTime;
     private boolean running = true;
-    Logger logger = Logger.getLogger(AutoClicker.class.getName());
+    Logger logger = Logger.getLogger(Runner.class.getName());
     private JTextArea textArea;
 
     private String status;
 
-    public AutoClicker() throws IOException {
+    public Runner() throws IOException {
         setTitle("AutoClicker Status");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,21 +42,15 @@ public class AutoClicker extends JFrame implements NativeKeyListener {
         status = "Initializing";
     }
 
-    public static void main(String[] args) throws InterruptedException, IOException {
-        AutoClicker autoClicker = new AutoClicker();
-        autoClicker.start();
-    }
-
-    public void timer() throws InterruptedException {
+    private void timer() throws InterruptedException {
         for (int i = intializeTimer; i > 0; i--) {
             updateTerminal("Starting in " + i + " seconds.");
             Thread.sleep(1000);
         }
-
         logger.info("Started.");
     }
 
-    public void start() throws InterruptedException {
+    public void start(IAction action) throws InterruptedException {
 
         timer();
         registerHook();
@@ -65,7 +59,7 @@ public class AutoClicker extends JFrame implements NativeKeyListener {
         new Thread(this::updateLoop).start();
 
         status = "Running";
-        actions.oneTickKarambwan();
+        action.run();
 
     }
 
@@ -92,7 +86,7 @@ public class AutoClicker extends JFrame implements NativeKeyListener {
             }
         } else if (e.getKeyCode() == NativeKeyEvent.VC_E) {
             status = "Stopping";
-            actions.requestStop();
+            COOKING_KARAMBWAN.requestStop();
             running = false;
             logger.info(e.getKeyCode() + " pressed! requesting stop.");
         }
@@ -113,8 +107,8 @@ public class AutoClicker extends JFrame implements NativeKeyListener {
         StringBuilder sb = new StringBuilder();
         sb.append(message).append("\n");
         sb.append("Status: ").append(status).append("\n");
-        sb.append("Inventories: ").append(actions.getInventories()).append("\n");
-        sb.append("Actions: ").append(actions.getActions()).append("\n");
+        sb.append("Inventories: ").append(COOKING_KARAMBWAN.getInventories()).append("\n");
+        sb.append("Actions: ").append(COOKING_KARAMBWAN.getActions()).append("\n");
         textArea.setText(sb.toString());
     }
 

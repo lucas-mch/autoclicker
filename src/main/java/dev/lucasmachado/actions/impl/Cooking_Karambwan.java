@@ -1,15 +1,13 @@
-package dev.lucasmachado;
+package dev.lucasmachado.actions.impl;
+
+import dev.lucasmachado.actions.Action;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
-import java.util.logging.Logger;
 
-import static dev.lucasmachado.Constants.inventorySize;
+import static dev.lucasmachado.commons.Constants.inventorySize;
 
-public class Actions {
-    private static Robot robot;
-    private static Locations locations;
-    private Boolean stopRequested = Boolean.FALSE;
+public class Cooking_Karambwan extends Action {
     private Integer inventories = 0;
     private Integer actions = 0;
 
@@ -20,44 +18,6 @@ public class Actions {
     public Integer getActions() {
         return actions;
     }
-
-    public Actions() {
-        try {
-            robot = new Robot();
-            locations = new Locations();
-        } catch (AWTException | InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void oneTickKarambwan() throws InterruptedException {
-        for (int i = 1; i < 1000000; i++) {
-            if (stopRequested) {
-                break;
-            }
-            Thread.sleep(700);
-            openBank();
-            Thread.sleep(700);
-            depositItens();
-            Thread.sleep(700);
-            getKarambwan();
-            Thread.sleep(700);
-            closeBank();
-            Thread.sleep(700);
-
-            inventories++;
-
-            for (int j = 1; j <= inventorySize; j++) {
-                if (stopRequested) {
-                    break;
-                }
-                Thread.sleep(475);
-                cook();
-                actions++;
-            }
-        }
-    }
-
 
     public static void click(Point coordinate, String action) throws InterruptedException {
         robot.mouseMove(coordinate.x, coordinate.y);
@@ -91,4 +51,38 @@ public class Actions {
     public void requestStop() {
         this.stopRequested = true;
     }
+
+    @Override
+    public void run() {
+        try {
+            for (int i = 1; i < 1000000; i++) {
+                if (stopRequested) {
+                    break;
+                }
+                Thread.sleep(700);
+                openBank();
+                Thread.sleep(700);
+                depositItens();
+                Thread.sleep(700);
+                getKarambwan();
+                Thread.sleep(700);
+                closeBank();
+                Thread.sleep(700);
+
+                inventories++;
+
+                for (int j = 1; j <= inventorySize; j++) {
+                    if (stopRequested) {
+                        break;
+                    }
+                    Thread.sleep(475);
+                    cook();
+                    actions++;
+                }
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
