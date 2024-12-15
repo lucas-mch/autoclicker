@@ -42,7 +42,8 @@ public class Terminal extends JFrame implements NativeKeyListener {
         logger.info("Started.");
     }
 
-    public Terminal(Instant startTime, Action action) {
+    public Terminal(Instant startTime,
+                    Action action) {
         this.startTime = startTime;
         this.action = action;
         setTitle("AutoClicker Status");

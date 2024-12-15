@@ -14,8 +14,7 @@ public class MouseAction {
         }
     }
 
-    public static void click(Point coordinate,
-                             String action) throws InterruptedException {
+    public static void click(Point coordinate, String action) throws InterruptedException {
         robot.mouseMove(coordinate.x, coordinate.y);
         Thread.sleep(150);
         robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);

@@ -18,10 +18,6 @@ public abstract class Action {
         this.stopRequested = true;
     }
 
-    public void requestRestart() {
-        this.stopRequested = false;
-    }
-
     @Getter
     Map<String, Point> coordinates = new HashMap<>();
 
