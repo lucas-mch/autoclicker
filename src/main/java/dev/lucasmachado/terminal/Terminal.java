@@ -59,10 +59,9 @@ public class Terminal extends JFrame implements NativeKeyListener {
     }
 
     public void updateTerminal(String message) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(message).append("\n");
-        sb.append("Status: ").append(status).append("\n");
-        textArea.setText(sb.toString());
+        String sb = message + "\n" +
+                "Status: " + status + "\n";
+        textArea.setText(sb);
     }
 
     public void updateLoop() {
