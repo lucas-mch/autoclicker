@@ -33,6 +33,7 @@ public class Terminal extends JFrame implements NativeKeyListener {
         startTimer();
         registerHook();
         setStatus("Running");
+        new Thread(this::updateLoop).start();
     }
 
     private void startTimer() throws InterruptedException {
@@ -43,8 +44,7 @@ public class Terminal extends JFrame implements NativeKeyListener {
         logger.info("Started.");
     }
 
-    public Terminal(Instant startTime,
-                    Action action) throws IOException {
+    public Terminal(Instant startTime, Action action) {
         this.startTime = startTime;
         this.action = action;
         setTitle("AutoClicker Status");
