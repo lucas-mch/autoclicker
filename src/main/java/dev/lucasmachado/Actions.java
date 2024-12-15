@@ -5,6 +5,7 @@ import java.awt.event.InputEvent;
 import java.util.logging.Logger;
 
 import static dev.lucasmachado.Constants.inventorySize;
+import static dev.lucasmachado.mouse.MouseAction.click;
 
 public class Actions {
     private static Robot robot;
@@ -58,13 +59,6 @@ public class Actions {
         }
     }
 
-
-    public static void click(Point coordinate, String action) throws InterruptedException {
-        robot.mouseMove(coordinate.x, coordinate.y);
-        Thread.sleep(150);
-        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-    }
 
     public void getKarambwan() throws InterruptedException {
         click(locations.karambwanBanked, "getting Karambwan");

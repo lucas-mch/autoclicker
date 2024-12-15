@@ -3,6 +3,8 @@ package dev.lucasmachado;
 import java.awt.*;
 import java.util.logging.Logger;
 
+import static dev.lucasmachado.mouse.MouseAction.getMouseLocation;
+
 public class Locations {
 
     public Point lastInventory;
@@ -12,9 +14,6 @@ public class Locations {
     public Point bank;
     public Point closeBank;
 
-    private final Integer selectTime = 5000;
-
-    Logger logger = Logger.getLogger(Locations.class.getName());
     public Locations() throws InterruptedException {
         setLastInventory();
         setFire();
@@ -48,12 +47,6 @@ public class Locations {
         closeBank = getMouseLocation("do botão que fecha o banco.");
     }
 
-    private Point getMouseLocation(String msg) throws InterruptedException {
-        System.out.println("Por favor, defina a posição " + msg);
-        Thread.sleep(selectTime);
-        Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
-        System.out.println("posição do último espaço do inventário definida em: [x: " + mouseLocation.x + "] , [y: " + mouseLocation.y + "]");
-        return mouseLocation;
-    }
+
 
 }

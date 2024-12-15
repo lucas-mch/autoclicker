@@ -4,28 +4,35 @@ import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
+import dev.lucasmachado.actions.FletchDarts;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import javax.swing.*;
 import java.awt.*;
-
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class AutoClicker extends JFrame implements NativeKeyListener {
-    private static final Integer intializeTimer = 15;
-    private static final Actions actions = new Actions();
+    private static final Integer initializeTimer = 5;
+    private static final FletchDarts fletchDarts;
+
+    static {
+        try {
+            fletchDarts = new FletchDarts();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Terminal terminal;
     private Instant startTime;
     private boolean running = true;
-    Logger logger = Logger.getLogger(AutoClicker.class.getName());
-    private JTextArea textArea;
-
+    private final Logger logger = Logger.getLogger(AutoClicker.class.getName());
+    private final JTextArea textArea;
     private String status;
 
     public AutoClicker() throws IOException {
@@ -48,25 +55,26 @@ public class AutoClicker extends JFrame implements NativeKeyListener {
     }
 
     public void timer() throws InterruptedException {
-        for (int i = intializeTimer; i > 0; i--) {
+        for (int i = initializeTimer; i > 0; i--) {
             updateTerminal("Starting in " + i + " seconds.");
             Thread.sleep(1000);
         }
-
         logger.info("Started.");
     }
 
     public void start() throws InterruptedException {
-
         timer();
         registerHook();
-
         startTime = Instant.now();
         new Thread(this::updateLoop).start();
-
         status = "Running";
-        actions.oneTickKarambwan();
-
+        new Thread(() -> {
+            try {
+                fletchDarts.run();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     public void registerHook() {
@@ -76,9 +84,7 @@ public class AutoClicker extends JFrame implements NativeKeyListener {
             logger.setLevel(Level.OFF);
             GlobalScreen.addNativeKeyListener(this);
         } catch (NativeHookException ex) {
-            logger.log(Level.WARNING, "There was a problem registering the native hook.");
-            System.err.println(ex.getMessage());
-            ex.printStackTrace();
+            logger.log(Level.WARNING, "There was a problem registering the native hook.", ex);
             System.exit(1);
         }
     }
@@ -91,10 +97,15 @@ public class AutoClicker extends JFrame implements NativeKeyListener {
                 ex.printStackTrace();
             }
         } else if (e.getKeyCode() == NativeKeyEvent.VC_E) {
-            status = "Stopping";
-            actions.requestStop();
+            status = "Paused";
+            fletchDarts.requestStop();
             running = false;
             logger.info(e.getKeyCode() + " pressed! requesting stop.");
+        } else if (e.getKeyCode() == NativeKeyEvent.VC_R) {
+            status = "Restarting";
+            fletchDarts.requestRestart();
+            running = true;
+            logger.info(e.getKeyCode() + " pressed! requesting restart.");
         }
     }
 
@@ -113,13 +124,10 @@ public class AutoClicker extends JFrame implements NativeKeyListener {
         StringBuilder sb = new StringBuilder();
         sb.append(message).append("\n");
         sb.append("Status: ").append(status).append("\n");
-        sb.append("Inventories: ").append(actions.getInventories()).append("\n");
-        sb.append("Actions: ").append(actions.getActions()).append("\n");
         textArea.setText(sb.toString());
     }
 
     private long getTimeElapsed() {
         return Duration.between(startTime, Instant.now()).getSeconds();
     }
-
 }
