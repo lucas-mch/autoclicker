@@ -1,4 +1,4 @@
-package dev.lucasmachado;
+package dev.lucasmachado.actions;
 
 import java.awt.*;
 import java.util.logging.Logger;

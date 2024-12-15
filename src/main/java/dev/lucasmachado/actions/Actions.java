@@ -1,10 +1,8 @@
-package dev.lucasmachado;
+package dev.lucasmachado.actions;
 
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.util.logging.Logger;
 
-import static dev.lucasmachado.Constants.inventorySize;
+import static dev.lucasmachado.configs.Constants.INVENTORY_SIZE;
 import static dev.lucasmachado.mouse.MouseAction.click;
 
 public class Actions {
@@ -48,7 +46,7 @@ public class Actions {
 
             inventories++;
 
-            for (int j = 1; j <= inventorySize; j++) {
+            for (int j = 1; j <= INVENTORY_SIZE; j++) {
                 if (stopRequested) {
                     break;
                 }

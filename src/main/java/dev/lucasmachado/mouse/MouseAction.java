@@ -14,7 +14,8 @@ public class MouseAction {
         }
     }
 
-    public static void click(Point coordinate, String action) throws InterruptedException {
+    public static void click(Point coordinate,
+                             String action) throws InterruptedException {
         robot.mouseMove(coordinate.x, coordinate.y);
         Thread.sleep(150);
         robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
@@ -25,7 +26,7 @@ public class MouseAction {
         System.out.println("Por favor, defina a posição " + msg);
         Thread.sleep(5000);
         Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
-        System.out.println("posição do último espaço do inventário definida em: [x: " + mouseLocation.x + "] , [y: " + mouseLocation.y + "]");
+        System.out.println("posição do " + msg + " definida em: [x: " + mouseLocation.x + "] , [y: " + mouseLocation.y + "]");
         return mouseLocation;
     }
 
