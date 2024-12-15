@@ -6,11 +6,9 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import dev.lucasmachado.actions.Action;
 import lombok.Setter;
-import org.jline.terminal.TerminalBuilder;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.logging.Level;
